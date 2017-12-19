@@ -80,6 +80,10 @@ public class WindowsFileChooser
 	protected File currentDirectory;
 	protected ArrayList<String[]> filters;
 
+	protected String initialFile;
+	protected String initialDirectory;
+	protected String title;
+
 	/**
 	 * creates a new file chooser
 	 */
@@ -201,15 +205,31 @@ public class WindowsFileChooser
 		// buffer size plus one for the terminating null byte.
 		params.nMaxFile = bufferLength;
 
-		if (currentDirectory != null) {
-			params.lpstrInitialDir = currentDirectory.getAbsolutePath();
-		}
-
 		// build filter string if filters were specified
 		if (filters.size() > 0) {
 			params.lpstrFilter = new WString(buildFilterString());
 			params.nFilterIndex = 1; // TODO don't hardcode here
 		}
+
+		// now set the initial file or directory
+		if (initialFile == null) {
+			if (initialDirectory != null) {
+				int buffer = 4 * initialDirectory.getBytes().length + 1;
+				params.lpstrInitialDir = new Memory(buffer);
+				params.lpstrInitialDir.clear(buffer);
+				params.lpstrInitialDir.setWideString(0L, initialDirectory);
+			}
+		} else {
+			params.lpstrFile.setWideString(0L, initialFile);
+		}
+
+		if (title != null) {
+			int buffer = 4 * title.getBytes().length + 1;
+			params.lpstrTitle = new Memory(buffer);
+			params.lpstrTitle.clear(buffer);
+			params.lpstrTitle.setWideString(0L, title);
+		}
+
 
 		final boolean approved = open ?
 			Comdlg32.GetOpenFileNameW(params) :
@@ -290,5 +310,33 @@ public class WindowsFileChooser
 	 */
 	public File getCurrentDirectory() {
 		return currentDirectory;
+	}
+
+	public String getInitialFile() {
+		return initialFile;
+	}
+
+	public void setInitialFile(String initialFile) {
+		this.initialFile = initialFile.replace("/", "\\");
+	}
+
+	public String getInitialDirectory() {
+		return initialDirectory;
+	}
+
+	public void setInitialDirectory(String initialDirectory) {
+		this.initialDirectory = initialDirectory.replace("/", "\\");
+
+		this.initialDirectory = this.initialDirectory.endsWith("\\") ?
+			this.initialDirectory :
+			this.initialDirectory + "\\";
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 }

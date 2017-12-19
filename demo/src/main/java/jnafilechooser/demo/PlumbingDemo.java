@@ -66,6 +66,7 @@ public class PlumbingDemo {
 				params.nMaxFile = 260;
 				params.lpstrFile = new Memory(260);
 				params.lpstrFile.clear(260);
+				params.lpstrFile.setWideString(0L, "C:\\Users\\pc\\Desktop\\test.js");
 				String filterStr = "All Files\0*.*\0Text Files\0*.txt;*.log\0Pictures\0*.png;*.jpg;*.bmp;*.gif\0\0";
 				params.lpstrFilter = new WString(filterStr);
 				params.lpstrCustomFilter = null;

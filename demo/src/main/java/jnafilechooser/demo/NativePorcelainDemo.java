@@ -50,6 +50,9 @@ public class NativePorcelainDemo {
 				fc.addFilter("All Files", "*");
 				fc.addFilter("Pictures", "jpg", "jpeg", "gif", "bmp", "png");
 				fc.addFilter("Text Files", "txt", "log", "nfo", "xml");
+				fc.setTitle("Choose Keystore");
+//				fc.setInitialFile("C:/Users/pc/Desktop/ReactTest1/package.json");
+				fc.setInitialDirectory("C:/Users/pc/Desktop/ReactTest1");
 				if (fc.showOpenDialog(frame)) {
 					final File f = fc.getSelectedFile();
 					JOptionPane.showMessageDialog(frame, f.getAbsolutePath(),
